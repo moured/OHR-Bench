@@ -13,5 +13,6 @@ python quick_start.py \
   --task 'Retrieval' \
   --evaluation_stage 'retrieval' \
   --num_threads 8 \
-  --show_progress_bar True
+  --show_progress_bar True \
+  --emb_path ./doc_embeddings/
   

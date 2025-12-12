@@ -7,4 +7,4 @@ tmp/
 bash
 tmp*
 real_config*
-logs/*
+logs/*doc_embeddings/

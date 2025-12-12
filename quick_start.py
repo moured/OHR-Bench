@@ -3,12 +3,12 @@ from loguru import logger
 from src.datasets.dataset import get_task_datasets
 from evaluator import StageEvaluator
 from src.llms import GPT
-from src.llms import Qwen2_7B_Instruct, LLaMA31_8B_Instruct, Qwen25_7B_Instruct, Qwen2VL_7B_Instruct, InternVL2_8B_Instruct
+# from src.llms import Qwen2_7B_Instruct, LLaMA31_8B_Instruct, Qwen25_7B_Instruct, Qwen2VL_7B_Instruct, InternVL2_8B_Instruct
 from src.llms import Mock
 
 from src.tasks.quest_answer import QuestAnswer, QuestAnswer_image, QuestAnswer_OCR, QuestAnswer_image_OCR
 from src.tasks.retrieval import RetrievalTask
-from src.retrievers import CustomBM25Retriever, CustomBGEM3Retriever, CustomPageRetriever
+from src.retrievers import CustomBM25Retriever, CustomBGEM3Retriever, CustomPageRetriever, CustomHybridRetriever
 from src.embeddings.base import HuggingfaceEmbeddings
 
 parser = argparse.ArgumentParser()
@@ -37,6 +37,8 @@ parser.add_argument('--contain_original_data', action='store_true', help="Whethe
 
 parser.add_argument('--evaluation_stage', default='generation', choices=['retrieval', 'generation', 'end2end'], help="Which stage to be evaluated in RAG")
 
+parser.add_argument('--emb_path', type=str, default=None, help="Directory containing precomputed embeddings")
+
 args = parser.parse_args()
 logger.info(args)
 
@@ -53,7 +55,7 @@ def setup_seed(seed):
 setup_seed(0)
 
 if args.evaluation_stage == "retrieval":
-    assert args.retriever in ["bge-m3", "bm25"], f"The retriever {args.retriever} is not supported for stage {args.evaluation_stage}."
+    assert args.retriever in ["bge-m3", "bm25", "hybrid"], f"The retriever {args.retriever} is not supported for stage {args.evaluation_stage}."
     args.task = "Retrieval"
     args.model_name = "mock"
 elif args.evaluation_stage == "generation":
@@ -89,7 +91,7 @@ if args.retriever == "bge-m3":
     embed_model = HuggingfaceEmbeddings(model_name="BAAI/bge-m3")
     retriever = CustomBGEM3Retriever(
         args.docs_path, embed_model=embed_model, embed_dim=1024,
-        chunk_size=1024, chunk_overlap=0, similarity_top_k=args.retrieve_top_k
+        chunk_size=1024, chunk_overlap=0, similarity_top_k=args.retrieve_top_k, emb_path=args.emb_path
     )
 elif args.retriever == "bm25":
     retriever = CustomBM25Retriever(
@@ -98,6 +100,17 @@ elif args.retriever == "bm25":
 elif args.retriever == "page":
     retriever = CustomPageRetriever(
         args.docs_path
+    )
+elif args.retriever == "hybrid":
+    embed_model = HuggingfaceEmbeddings(model_name="BAAI/bge-m3")
+    retriever = CustomHybridRetriever(
+        args.docs_path, 
+        embed_model=embed_model, 
+        embed_dim=1024,
+        chunk_size=1024, 
+        chunk_overlap=0, 
+        similarity_top_k=args.retrieve_top_k, 
+        emb_path=args.emb_path
     )
 else:
     raise NotImplementedError()

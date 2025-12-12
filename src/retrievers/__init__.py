@@ -1,1 +1,1 @@
-from .custom import CustomBM25Retriever, CustomBGEM3Retriever, CustomPageRetriever
+from .custom import CustomBM25Retriever, CustomBGEM3Retriever, CustomPageRetriever, CustomHybridRetriever

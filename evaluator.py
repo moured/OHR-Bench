@@ -209,7 +209,8 @@ class StageEvaluator(BaseEvaluator):
         elif self.stage == "retrieval":
             ret = {
                 "CustomBM25Retriever": "bm25",
-                "CustomBGEM3Retriever": "bge-m3"
+                "CustomBGEM3Retriever": "bge-m3",
+                "CustomHybridRetriever": "hybrid"
             }[self.retriever.__class__.__name__]
             self.output_path = os.path.join(
                 output_dir, f'{output_name}_{ret}_top{self.retriever.similarity_top_k}.json'
@@ -217,7 +218,8 @@ class StageEvaluator(BaseEvaluator):
         elif self.stage == "end2end":
             ret = {
                 "CustomBM25Retriever": "bm25",
-                "CustomBGEM3Retriever": "bge-m3"
+                "CustomBGEM3Retriever": "bge-m3",
+                "CustomHybridRetriever": "hybrid"
             }[self.retriever.__class__.__name__]
             self.output_path = os.path.join(
                 output_dir, f'{output_name}_{ret}_top{self.retriever.similarity_top_k}_{model.params["model_name"]}.json'

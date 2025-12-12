@@ -1,7 +1,7 @@
 import torch
 from transformers import AutoModelForCausalLM, AutoTokenizer
 from importlib import import_module
-from transformers import Qwen2VLForConditionalGeneration, AutoTokenizer, AutoProcessor
+from transformers import AutoTokenizer, AutoProcessor # Qwen2VLForConditionalGeneration
 from qwen_vl_utils import process_vision_info
 import math
 import torchvision.transforms as T
