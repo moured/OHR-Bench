@@ -3,10 +3,13 @@
 </h1>
 
 # What is new 
+Note : first place doc embeddings and output from the drive to the OHR-Bench.
 - quick start script modified to accept --emb_path ./doc_embeddings/
 - the code can load existing embeddings
 - outputs and embeddings are shared in drive 
 - custom.py is also modified to enclode Hybrid mode and loading embeddings
+- you can try the run_retrieval.bat in shell folder if you use windows -> run_retrieval.bat gt bge-m3
+
 
 # Acknowledgement
 The evaluation framework is based on [CRUD](https://github.com/IAAR-Shanghai/CRUD_RAG), thanks so much for this brilliant project.
